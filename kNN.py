@@ -59,6 +59,6 @@ class kNN:
     def accuracy(self, testing_labels):
         # Check to see if the predictions list or the testing labels list is empty,
         # if it is empty then return -1.
-        if not self.predictionResults or not testing_labels:
+        if not self.predictionResults or not testing_labels.any():
             return -1
         return (sum(self.predictionResults == testing_labels)) / len(testing_labels)
