@@ -42,18 +42,20 @@ class kNN:
         distances = distances.sort_values('distance')
         distances = distances.iloc[:self.k]
         distances = distances['labels'].tolist()
-        most_common = Counter(distances).most_common(1)
+        mostCommon = Counter(distances).mostCommon(1)
 
-        # Returns either 1D or 2D array
+        # Returns either 1D or 2D array,
+        # 1D is [Most Common Label],
+        # 2D is [Most Common Label] [Confidence as float].
         if confidence == True:
-          return most_common[0][0], (most_common[0][1] / self.k)
-        return most_common[0][0]
-
+          return mostCommon[0][0], (mostCommon[0][1] / self.k)
+        return mostCommon[0][0]
+                
     # Simple function to quick return the accuracy of the model as a decimal.
     def accuracy(self, testing_labels):
         # Check to see if the predictions list or the testing labels list is empty,
         # if it is empty then return -1.
         if not self.predictionResults or not testing_labels.any():
             return -1
-            
+
         return (sum(self.predictionResults == testing_labels)) / len(testing_labels)
