@@ -39,5 +39,5 @@ or use Python with the following dependencies:
 
 ## Author
 
-- [Jacob Swiniarski](https://www.github.com/jspako)
+- [Jakub Swiniarski](https://www.github.com/jspako)
 
