@@ -94,6 +94,7 @@ class DecisionTree:
         for feature in range(num_columns):
             # Sort the subset list as to get better GDI results.
             sorted_subset_indices = subset[:, feature].argsort()
+
             # The sample range starts at index 1 and ends at length - 1,
             # that is to ensure the left split and the right split always contain at least 1 sample in them.
             for sample in range(1, num_rows):
