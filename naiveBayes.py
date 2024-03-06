@@ -1,4 +1,4 @@
-class naiveBayes:
+class NaiveBayes:
 
     # Naive Bayes Classifier Constructor
     def __init__(self):

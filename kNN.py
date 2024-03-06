@@ -4,7 +4,7 @@ from collections import Counter
 import pandas as pd
 
 
-class kNN:
+class KNN:
 
     # kNN Classifier Constructor
     # To initialise, the number of neighbours the model will use needs to be provided.
@@ -43,12 +43,12 @@ class kNN:
         distances = distances.sort_values('distance')
         distances = distances.iloc[:self.k]
         distances = distances['labels'].tolist()
-        mostCommon = Counter(distances).most_common(1)
+        most_common = Counter(distances).most_common(1)
 
         # Returns either 1D or 2D array
         if confidence:
-            return mostCommon[0][0], (mostCommon[0][1] / self.k)
-        return mostCommon[0][0]
+            return most_common[0][0], (most_common[0][1] / self.k)
+        return most_common[0][0]
 
     # Simple function to quick return the accuracy of the model as a decimal.
     def accuracy(self, testing_labels):
@@ -65,5 +65,5 @@ class kNN:
         try:
             return (sum(self.predictionResults == testing_labels)) / len(testing_labels)
         except ValueError:
-            accuracyList = [row[0] for row in self.predictionResults]
-            return (sum(accuracyList == testing_labels)) / len(testing_labels)
+            accuracy_list = [row[0] for row in self.predictionResults]
+            return (sum(accuracy_list == testing_labels)) / len(testing_labels)
