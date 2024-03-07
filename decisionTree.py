@@ -24,7 +24,7 @@ class DecisionTree:
     # Iterate through the provided testing data,
     # then travel through the decision until a leaf is reached,
     # and return the assigned prediction within that leaf.
-    def predict(self, testing_data):
+    def predict(self, testing_data, confidence=False):
         for sample in testing_data:
             # Start at the root node
             node = self.root
@@ -33,7 +33,10 @@ class DecisionTree:
                     node = node.left
                 else:
                     node = node.right
-            self.predictionResults.append(node.prediction)
+            if confidence:
+                self.predictionResults.append([node.prediction, node.confidence])
+            else:
+                self.predictionResults.append(node.parent.prediction)
         return self.predictionResults
 
     @staticmethod
