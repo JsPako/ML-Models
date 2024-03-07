@@ -166,8 +166,8 @@ class DecisionTreeNode:
     # Recursive function that prints a visual representation of the decision tree classifier.
     def display(self, indent=0, prefix="Left node -"):
         if self.leaf:
-            print(" " * indent + prefix + " Predicted Class:", self.prediction)
+            print(" " * indent + prefix + " Predicted Class:", self.prediction + " | Confidence:", self.confidence)
         else:
-            print(" " * indent + f"Feature {self.featureIndex} <= {self.valueName}, Gini: {self.gini}")
+            print(" " * indent + f"Feature Index {self.featureIndex} <= {self.valueName}, Gini: {self.gini}")
             self.left.display(indent + 5, prefix="Left Node -")
             self.right.display(indent + 5, prefix="Right Node -")
