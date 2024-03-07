@@ -98,7 +98,6 @@ class DecisionTree:
             # The sample range starts at index 1 and ends at length - 1,
             # that is to ensure the left split and the right split always contain at least 1 sample in them.
             for sample in range(1, num_rows):
-
                 left_split_labels = subset_labels[sorted_subset_indices[:sample]]
                 right_split_labels = subset_labels[sorted_subset_indices[sample:]]
 
@@ -139,11 +138,11 @@ class DecisionTree:
         # save the calculated values into the appropriate object attributes,
         # and return the tree node.
         tree_node = DecisionTreeNode()
-        tree_node.feature = best_decision_feature_index
+        tree_node.featureIndex = best_decision_feature_index
         tree_node.valueIndex = best_decision_value_index
         tree_node.valueName = best_decision_value
         tree_node.gini = best_gini_diversity_index
-        tree_node.leaf = left_tree
+        tree_node.left = left_tree
         tree_node.right = right_tree
 
         return tree_node
