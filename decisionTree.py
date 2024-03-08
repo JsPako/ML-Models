@@ -36,7 +36,7 @@ class DecisionTree:
             if confidence:
                 self.predictionResults.append([node.prediction, node.confidence])
             else:
-                self.predictionResults.append(node.parent.prediction)
+                self.predictionResults.append(node.prediction)
         return self.predictionResults
 
     @staticmethod
