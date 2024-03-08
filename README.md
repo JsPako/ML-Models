@@ -18,9 +18,12 @@ Processing time and other related side-issues don’t matter.
 - k-Nearest Neighbours Classification
 - Naive Bayes Classification
 - Decision Tree Classification
-- Regression
+- Linear Regression
 - Logistic Regression
 - Artificial Neural Networks
+
+    ### Extracurricular
+  - Vector Support Machine Classification
 
 
 ## Usage
