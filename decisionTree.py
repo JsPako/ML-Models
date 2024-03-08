@@ -150,6 +150,24 @@ class DecisionTree:
 
         return tree_node
 
+    # Simple function to quick return the accuracy of the model as a decimal.
+    def accuracy(self, testing_labels):
+        # Check to see if the predictions list or the testing labels list is empty,
+        # if it is empty then return -1.
+        if not self.predictionResults or not testing_labels.any():
+            return -1
+
+        # Try to calculate accuracy from the predicted results and provided testing labels,
+        # and if the prediction results also contain the confidence values,
+        # catch the value error (comparing 2D to 1D list),
+        # then extract the labels and save as a new accuracy list,
+        # calculate accuracy using new list and return accuracy value.
+        try:
+            return (sum(self.predictionResults == testing_labels)) / len(testing_labels)
+        except ValueError:
+            accuracy_list = [row[0] for row in self.predictionResults]
+            return (sum(accuracy_list == testing_labels)) / len(testing_labels)
+
 
 class DecisionTreeNode:
 
