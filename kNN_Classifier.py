@@ -4,7 +4,7 @@ from collections import Counter
 import pandas as pd
 
 
-class KNN:
+class KNNClassifier:
 
     # kNN Classifier Constructor
     # To initialise, the number of neighbours the model will use needs to be provided.
