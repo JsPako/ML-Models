@@ -23,7 +23,9 @@ Processing time and other related side-issues don’t matter.
 - Artificial Neural Networks
 
     ### Extracurricular
-  - Vector Support Machine Classification
+    - k-Nearest Neighbours Regression
+    - Decision Tree Regression
+    - Vector Support Machine Classification
 
 
 ## Usage
