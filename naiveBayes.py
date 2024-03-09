@@ -1,4 +1,5 @@
 from collections import Counter
+import math
 
 
 class NaiveBayes:
@@ -38,13 +39,15 @@ class NaiveBayes:
         for class_name, data in zip(self.trainLabels, self.trainData):
             data_dictionary[class_name].append(data)
 
-        # Calculate the mean and standard deviation for each feature,
-        # Each class should have N feature number of means and standard deviations,
-        # (4 Features) = Class_name : 4 means, 4 standard deviations
+        # Set up the data dictionary that will be used to store the mean and standard deviation
         mean_std = {}
         for class_name in unique_classes:
             mean_std[class_name] = []
 
+        # Calculate the mean and standard deviation for each feature,
+        # Each class should have N feature number of means and standard deviations,
+        # E.G. - (4 Features) = Class_name : 4 means, 4 standard deviations per class.
+        index = 0
         for data in data_dictionary.values():
             for feature in range(len(data[0])):
                 mean = 0
@@ -54,4 +57,8 @@ class NaiveBayes:
                     std += row[feature]
 
                 mean = mean / len(data)
-                std = 
+                std = math.sqrt((std - mean) ** 2 / len(data))
+
+                mean_std[unique_classes[index]].append([mean, std])
+
+            index += 1
