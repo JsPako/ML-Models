@@ -1,6 +1,3 @@
-from collections import Counter
-
-
 class DecisionTree:
 
     # Decision Tree Regressor Constructor
@@ -80,8 +77,15 @@ class DecisionTree:
             # and calculate the confidence percentage.
             leaf_node = DecisionTreeNode()
             leaf_node.leaf = True
-            leaf_node.prediction = Counter(subset_values).most_common(1)[0][0]
-            leaf_node.confidence = (Counter(subset_values).most_common(1)[0][1] / num_rows)
+
+            # Take all the values inside the split,
+            # average the values and return that as the prediction.
+            target_value = 0
+            for value in subset_values:
+                target_value += value
+            target_value = target_value / len(subset_values)
+
+            leaf_node.prediction = target_value
             return leaf_node
 
         # Initialise default values for finding the best split,
@@ -119,8 +123,15 @@ class DecisionTree:
             # and calculate the confidence percentage.
             leaf_node = DecisionTreeNode()
             leaf_node.leaf = True
-            leaf_node.prediction = Counter(subset_values).most_common(1)[0][0]
-            leaf_node.confidence = (Counter(subset_values).most_common(1)[0][1] / num_rows)
+
+            # Take all the values inside the split,
+            # average the values and return that as the prediction.
+            target_value = 0
+            for value in subset_values:
+                target_value += value
+            target_value = target_value / len(subset_values)
+
+            leaf_node.prediction = target_value
             return leaf_node
 
         # Split the subset based on the best split found
@@ -147,6 +158,23 @@ class DecisionTree:
 
         return tree_node
 
+    # Simple function to quick return the mean squared error of the model.
+    def mean_squared_error(self, testing_values):
+        # Check to see if the predictions list or the testing values list is empty,
+        # if it is empty then return -1.
+        if not self.predictionResults or not testing_values.any():
+            return -1
+
+        # Try to calculate mean squared error from the predicted results and provided testing values,
+        # then return the mean squared error.
+        total = 0
+        for predicted, true in zip(self.predictionResults, self.trainValues):
+            total += (predicted - true) ** 2
+
+        mse = total / len(testing_values)
+
+        return mse
+
 
 class DecisionTreeNode:
 
@@ -159,14 +187,13 @@ class DecisionTreeNode:
         self.gini = None
         self.leaf = False
         self.prediction = None
-        self.confidence = None
         self.left = None
         self.right = None
 
     # Recursive function that prints a visual representation of the decision tree regressor.
     def display(self, indent=0, prefix="Left node -"):
         if self.leaf:
-            print(" " * indent + prefix + " Predicted Class:", self.prediction + " | Confidence:", self.confidence)
+            print(" " * indent + prefix + " Predicted Value:", self.prediction)
         else:
             print(" " * indent + f"Feature Index {self.featureIndex} <= {self.valueName}, Gini: {self.gini}")
             self.left.display(indent + 5, prefix="Left Node -")
