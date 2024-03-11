@@ -47,8 +47,8 @@ class LinearRegressor:
         for feature in range(self.trainData.shape[1]):
             n = self.trainData.shape[0]
             self.coefficients.append(
-                (n * sums_of_xy[feature]) - (sums_of_x[feature] * sum_of_y)
-                / (n * sums_of_x2) - (sums_of_x2[feature]))
+                ((n * sums_of_xy[feature]) - (sums_of_x[feature] * sum_of_y))
+                / ((n * sums_of_x2) - (sums_of_x2[feature])))
 
             self.intercepts.append(sum_of_y - (self.coefficients[feature] * sums_of_x[feature]) / n)
 
