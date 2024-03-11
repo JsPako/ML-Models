@@ -67,6 +67,19 @@ class LinearRegressor:
 
         return self.predictionResults
 
+    # Simple function to quick return the mean squared error of the model.
+    def mean_squared_error(self, testing_values):
+        # Check to see if the predictions list or the testing values list is empty,
+        # if it is empty then return -1.
+        if not self.predictionResults or not testing_values.any():
+            return -1
 
+        # Try to calculate mean squared error from the predicted results and provided testing values,
+        # then return the mean squared error.
+        total = 0
+        for predicted, true in zip(self.predictionResults, self.trainValues):
+            total += (predicted - true) ** 2
 
+        mse = total / len(testing_values)
 
+        return mse
