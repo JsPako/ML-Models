@@ -1,8 +1,6 @@
 import math
 from collections import Counter
 
-import pandas as pd
-
 
 class KNNClassifier:
 
@@ -38,12 +36,19 @@ class KNNClassifier:
             for feature in range(train_value.shape[0]):
                 euclidean += (test_value[feature] - train_value[feature]) ** 2
             distances.append(math.sqrt(euclidean))
-        distances = pd.DataFrame({'distance': distances})
-        distances["labels"] = self.trainLabels
-        distances = distances.sort_values('distance')
-        distances = distances.iloc[:self.k]
-        distances = distances['labels'].tolist()
-        most_common = Counter(distances).most_common(1)
+
+        # Match the Euclidean distances with the training labels,
+        # sort based on the distance - lowest to highest.
+        distances = list(zip(distances, self.trainLabels))
+        distances = sorted(distances, key=lambda x: x[0], reverse=False)
+        distances = distances[:self.k]
+
+        # Iterate through the list and save only the training labels.
+        labels = []
+        for distance in distances:
+            labels.append(distance[1])
+
+        most_common = Counter(labels).most_common(1)
 
         # Returns either 1D or 2D array
         if confidence:

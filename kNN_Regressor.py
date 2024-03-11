@@ -1,7 +1,5 @@
 import math
 
-import pandas as pd
-
 
 class KNNRegressor:
 
@@ -36,16 +34,22 @@ class KNNRegressor:
             for feature in range(train_value.shape[0]):
                 euclidean += (test_value[feature] - train_value[feature]) ** 2
             distances.append(math.sqrt(euclidean))
-        distances = pd.DataFrame({'distance': distances})
-        distances["values"] = self.trainValues
-        distances = distances.sort_values('distance')
-        distances = distances.iloc[:self.k]
-        distances = distances['values'].tolist()
+
+        # Match the Euclidean distances with the training values,
+        # sort based on the distance - lowest to highest.
+        distances = list(zip(distances, self.trainValues))
+        distances = sorted(distances, key=lambda x: x[0], reverse=False)
+        distances = distances[:self.k]
+
+        # Iterate through the list and save only the training values.
+        distance_values = []
+        for distance in distances:
+            distance_values.append(distance[1])
 
         # Take the k number of nearest neighbours target values,
         # average the values and return that as the prediction.
         target_value = 0
-        for value in distances:
+        for value in distance_values:
             target_value += value
         target_value = target_value / len(distances)
 
