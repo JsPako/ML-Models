@@ -38,7 +38,6 @@ or use Python with the following dependencies:
 
 ```
   Python 3.10.11
-  Pandas 2.2.0
 ```
 
 
