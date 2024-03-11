@@ -52,8 +52,20 @@ class LinearRegressor:
 
             self.intercepts.append(sum_of_y - (self.coefficients[feature] * sums_of_x[feature]) / n)
 
-    def predict(self):
-        pass
+    # Iterate through the provided testing values,
+    # for each feature in the row calculate the target value using the appropriate line of best fit,
+    # sum the predicted target values,
+    # average the final sum,
+    # and return the average as the final prediction.
+    def predict(self, testing_values):
+        for row in testing_values:
+            target_value = 0
+            for feature in range(testing_values.shape[1]):
+                target_value += self.coefficients[feature] * row[feature] + self.intercepts[feature]
+
+            self.predictionResults.append(target_value / testing_values.shape[1])
+
+        return self.predictionResults
 
 
 
