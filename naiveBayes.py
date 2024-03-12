@@ -69,7 +69,7 @@ class NaiveBayes:
     # and iterates through the testing data,
     # and for each row calculates the likelihood that it belongs in each class,
     # gets the class label that has the highest likelihood and saves that as the prediction result,
-    # returns a list of predictions, and the confidence if set to True.
+    # returns a list of predictions, and a fake confidence if set to True.
     def predict(self, testing_data, confidence=False):
         for row in testing_data:
             predictions = {}
@@ -82,7 +82,9 @@ class NaiveBayes:
 
             prediction = max(predictions, key=predictions.get)
             if confidence:
-                prediction = list(max(predictions.items(), key=lambda item: item[1]))
+                # Fake confidence value of 0.5,
+                # it is 0.5 because I want the model to be treated as being unsure.
+                prediction = [prediction, 0.5]
             self.predictionResults.append(prediction)
 
         return self.predictionResults
@@ -94,7 +96,7 @@ class NaiveBayes:
         base = 1 / math.sqrt(2 * math.pi * (std ** 2))
         return base * exponent
 
-    # Simple function to quick return the accuracy of the model as a decimal.
+# Simple function to quick return the accuracy of the model as a decimal.
     def accuracy(self, testing_labels):
         # Check to see if the predictions list or the testing labels list is empty,
         # if it is empty then return -1.
