@@ -59,7 +59,7 @@ def mean_squared_error(self, testing_values):
     # Try to calculate mean squared error from the predicted results and provided testing values,
     # then return the mean squared error.
     total = 0
-    for predicted, true in zip(self.predictionResults, self.trainValues):
+    for predicted, true in zip(self.predictionResults, testing_values):
         total += (predicted - true) ** 2
 
     mse = total / len(testing_values)
