@@ -96,7 +96,7 @@ class NaiveBayes:
         base = 1 / math.sqrt(2 * math.pi * (std ** 2))
         return base * exponent
 
-# Simple function to quick return the accuracy of the model as a decimal.
+    # Simple function to quick return the accuracy of the model as a decimal.
     def accuracy(self, testing_labels):
         # Check to see if the predictions list or the testing labels list is empty,
         # if it is empty then return -1.
