@@ -1,7 +1,7 @@
 from collections import Counter
 
 
-class DecisionTree:
+class DecisionTreeClassifier:
 
     # Decision Tree Classifier Constructor
     # To initialise, the minimum allowed subset size needs to be provided,
