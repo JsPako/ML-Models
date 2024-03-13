@@ -1,6 +1,3 @@
-import math
-
-
 class DecisionTreeRegressor:
 
     # Decision Tree Regressor Constructor
@@ -76,7 +73,7 @@ class DecisionTreeRegressor:
             return leaf_node
 
         # Initialise default values for finding the best split.
-        best_variance = math.inf
+        best_variance = float('inf')
         best_decision_feature_index = None
         best_decision_value_index = None
         best_decision_value = None
