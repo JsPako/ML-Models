@@ -1,3 +1,6 @@
+import math
+
+
 class DecisionTreeRegressor:
 
     # Decision Tree Regressor Constructor
@@ -30,87 +33,70 @@ class DecisionTreeRegressor:
                     node = node.left
                 else:
                     node = node.right
-                self.predictionResults.append(node.prediction)
+            self.predictionResults.append(node.prediction)
         return self.predictionResults
 
     @staticmethod
-    def _gini_diversity_index(left_subset_labels, right_subset_labels):
-        # Find the sizes of each subset and the total combined size.
-        left_size = len(left_subset_labels)
-        right_size = len(right_subset_labels)
-        total_size = left_size + right_size
+    def _variance(left_subset_values, right_subset_values):
+        # Find the mean of the left and right subsets.
+        left_mean = sum(left_subset_values) / len(left_subset_values)
+        right_mean = sum(right_subset_values) / len(right_subset_values)
 
-        # Calculate the Gini Diversity Index for the left split.
-        left_proportion = 0
-        for label in set(left_subset_labels):
-            count = 0
-            for sample in left_subset_labels:
-                if sample == label:
-                    count += 1
-            left_proportion = left_proportion + ((count / left_size) ** 2)
+        # Calculate the variance for each split.
+        left_variance = 0
+        for value in left_subset_values:
+            left_variance += (value - left_mean) ** 2
 
-        # Calculate the Gini Diversity Index for the right split.
-        right_proportion = 0
-        for label in set(right_subset_labels):
-            count = 0
-            for sample in right_subset_labels:
-                if sample == label:
-                    count += 1
-            right_proportion = right_proportion + ((count / right_size) ** 2)
+        right_variance = 0
+        for value in right_subset_values:
+            right_variance += (value - right_mean) ** 2
 
-        # Combine the two GDI calculations and weight the results based on the proportion of the split size.
-        return (((left_size / total_size) * (1.0 - left_proportion)) +
-                ((right_size / total_size) * (1.0 - right_proportion)))
+        total_size = len(left_subset_values) + len(right_subset_values)
+
+        # Combine the two variance calculations into one and weight the result based on the split size.
+        return ((len(left_subset_values) / total_size) * left_variance +
+                (len(right_subset_values) / total_size) * right_variance)
 
     def _build(self, subset, subset_values):
-        # Get the number of rows and columns in the provided subset,
-        # turn the provided labels into a set then back into a list to get only unique labels.
+        # Get the number of rows and columns in the provided subset.
         num_rows, num_columns = subset.shape
-        unique_labels = set(subset_values)
 
-        # Check if the minimum subset size has been reached,
-        # and check if there's only one type of label in the subset label list.
-        if num_rows <= self.minSize or len(unique_labels) == 1:
+        # Check if the minimum subset size has been reached.
+        if num_rows <= self.minSize:
             # Initialise a decision tree node,
             # set the node to be a leaf node,
-            # and choose the most common prediction,
-            # and calculate the confidence percentage.
+            # and calculate the average prediction.
             leaf_node = DecisionTreeNode()
             leaf_node.leaf = True
 
             # Take all the values inside the split,
             # average the values and return that as the prediction.
-            target_value = 0
-            for value in subset_values:
-                target_value += value
-            target_value = target_value / len(subset_values)
-
+            target_value = sum(subset_values) / len(subset_values)
             leaf_node.prediction = target_value
             return leaf_node
 
-        # Initialise default values for finding the best split,
-        # GDI is set to 1.1 as the max value the _gini_diversity_index function can return is 1.
-        best_gini_diversity_index = 1.1
+        # Initialise default values for finding the best split.
+        best_variance = math.inf
         best_decision_feature_index = None
         best_decision_value_index = None
         best_decision_value = None
 
         for feature in range(num_columns):
-            # Sort the subset list as to get better GDI results.
+            # Sort the subset list as to get better variance results.
             sorted_subset_indices = subset[:, feature].argsort()
 
             # The sample range starts at index 1 and ends at length - 1,
             # that is to ensure the left split and the right split always contain at least 1 sample in them.
             for sample in range(1, num_rows):
-                left_split_labels = subset_values[sorted_subset_indices[:sample]]
-                right_split_labels = subset_values[sorted_subset_indices[sample:]]
+                left_split_values = subset_values[sorted_subset_indices[:sample]]
+                right_split_values = subset_values[sorted_subset_indices[sample:]]
 
-                gini = self._gini_diversity_index(left_split_labels, right_split_labels)
+                variance = self._variance(left_split_values, right_split_values)
 
                 # If the GDI value of split is better than the saved current best split,
                 # save the split as the new best one.
-                if gini < best_gini_diversity_index:
-                    best_gini_diversity_index = gini
+                if variance < best_variance:
+                    best_variance = variance
                     best_decision_feature_index = feature
                     best_decision_value_index = sample
                     best_decision_value = subset[sorted_subset_indices[sample], feature]
@@ -126,10 +112,7 @@ class DecisionTreeRegressor:
 
             # Take all the values inside the split,
             # average the values and return that as the prediction.
-            target_value = 0
-            for value in subset_values:
-                target_value += value
-            target_value = target_value / len(subset_values)
+            target_value = sum(subset_values) / len(subset_values)
 
             leaf_node.prediction = target_value
             return leaf_node
@@ -152,7 +135,7 @@ class DecisionTreeRegressor:
         tree_node.featureIndex = best_decision_feature_index
         tree_node.valueIndex = best_decision_value_index
         tree_node.valueName = best_decision_value
-        tree_node.gini = best_gini_diversity_index
+        tree_node.variance = best_variance
         tree_node.left = left_tree
         tree_node.right = right_tree
 
@@ -184,7 +167,7 @@ class DecisionTreeNode:
         self.featureIndex = None
         self.valueIndex = None
         self.valueName = None
-        self.gini = None
+        self.variance = None
         self.leaf = False
         self.prediction = None
         self.left = None
@@ -195,6 +178,6 @@ class DecisionTreeNode:
         if self.leaf:
             print(" " * indent + prefix + " Predicted Value:", self.prediction)
         else:
-            print(" " * indent + f"Feature Index {self.featureIndex} <= {self.valueName}, Gini: {self.gini}")
+            print(" " * indent + f"Feature Index {self.featureIndex} <= {self.valueName}, Variance: {self.variance}")
             self.left.display(indent + 5, prefix="Left Node -")
             self.right.display(indent + 5, prefix="Right Node -")
