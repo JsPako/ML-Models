@@ -4,8 +4,16 @@ from collections import Counter
 
 class KNNClassifier:
 
-    # kNN Classifier Constructor
-    # To initialise, the number of neighbours the model will use needs to be provided.
+    #   K-Nearest Neighbour (KNN) Classifier
+
+    #   This classifier predicts the class of a given data point by identifying the most common class among
+    #   the 'k' nearest training data points within the feature space. This occurs during the prediction phase
+    #   by taking in one given data point at a time, and calculating the distance from the input to all existing
+    #   training data points. Distance is calculated using the Euclidean distance function, then sorted in
+    #   ascending order, and by considering the classes among the 'k' number of training data points,
+    #   retrieving the most common class for the class prediction. Optionally, it can also provide the confidence score
+    #   for the class predictions.
+
     def __init__(self, number_of_neighbours):
         self.k = number_of_neighbours
         self.trainData = None
