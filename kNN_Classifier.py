@@ -89,7 +89,7 @@ class KNNClassifier:
 
         #   Accuracy Function
 
-        #   This function is needed to evaluate the performance of the KNN algorithm, providing the testing classes this
+        #   This function is needed to evaluate the performance of the KNN algorithm, provided the testing classes this
         #   function checks how many of the predicted classes match the testing classes. Returning the decimal value of
         #   how many were correct. Based on this accuracy information you can tell if the model needs more optimisation
         #   by adjusting the number of nearest neighbours considered.
