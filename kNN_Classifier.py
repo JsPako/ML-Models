@@ -15,21 +15,30 @@ class KNNClassifier:
     #   for the class predictions.
 
     def __init__(self, number_of_neighbours):
+
+        #   KNN Class Constructor
+
+        #   The class needs to be constructed with the wanted number of neighbours (k), as that is required by
+        #   the KNN algorithm to know how many neighbouring data points to consider when calculating the most common
+        #   class. This value is also required for calculating the confidence score as that is calculated by dividing
+        #   the number of neighbours that had the most common class by how many neighbours were considered.
+
         self.k = number_of_neighbours
         self.trainData = None
         self.trainLabels = None
         self.predictionResults = []
 
-    # Fit function that takes the training data and the training labels,
-    # and sets them as variable instances inside the class.
     def fit(self, training_data, training_labels):
         self.trainData = training_data
         self.trainLabels = training_labels
 
-    # Predict function that takes the testing data,
-    # and iterates through the list passing each value to the prediction algorithm,
-    # returns a list of predictions, and the confidence if set to True.
     def predict(self, testing_data, confidence=False):
+
+        #   Predict Function
+
+        #   This function takes in unseen data points, and returns the predicted classes for those data points.
+        #   Optionally, will also return the confidence score if the default False is set to True.
+
         if len(testing_data) == 0:
             return -1
 
@@ -38,45 +47,53 @@ class KNNClassifier:
         return self.predictionResults
 
     def _predict(self, test_value, confidence):
+
+        #   Internal Predict Function
+
+        #   This function calculates the Euclidean distance from the passed data point to all training data points, and
+        #   returns the most common class for that data point. This is the key function that contains all required
+        #   calculations to make the KNN algorithm work correctly. Optionally, it also takes a confidence which is
+        #   calculated by taking how many nearest data points have the majority class divided by how many data points
+        #   where considered (k).
+
         distances = []
         for train_value in self.trainData:
             euclidean = 0
             for feature in range(train_value.shape[0]):
+                #   Euclidean distance equation: Square root ( Sum of ( (test feature - train feature) ^ 2) )
                 euclidean += (test_value[feature] - train_value[feature]) ** 2
             distances.append(math.sqrt(euclidean))
 
-        # Match the Euclidean distances with the training labels,
-        # sort based on the distance - lowest to highest.
+        #   Combine the calculated distances with the training classes, as to be able to sort using the distance values
+        #   as the key, and then extract just the most common class from the combined list.
         distances = list(zip(distances, self.trainLabels))
         distances = sorted(distances, key=lambda x: x[0], reverse=False)
         distances = distances[:self.k]
-
-        # Iterate through the list and save only the training labels.
         labels = []
         for distance in distances:
             labels.append(distance[1])
-
         most_common = Counter(labels).most_common(1)
 
-        # Returns either 1D or 2D array
         if confidence:
             return most_common[0][0], (most_common[0][1] / self.k)
         return most_common[0][0]
 
-    # Simple function to quick return the accuracy of the model as a decimal.
     def accuracy(self, testing_labels):
-        # Check to see if the predictions list or the testing labels list is empty,
-        # if it is empty then return -1.
+
+        #   Accuracy function
+
+        #   This function is needed to evaluate the performance of the KNN algorithm, providing the testing classes the
+        #   function checks how many of the predicted classes match the testing classes. Returning the decimal value of
+        #   how many were correct. Based on this accuracy information you can tell if the model needs more optimisation
+        #   by adjusting the number of nearest neighbours considered.
+
         if not self.predictionResults or not testing_labels.any():
             return -1
 
-        # Try to calculate accuracy from the predicted results and provided testing labels,
-        # and if the prediction results also contain the confidence values,
-        # catch the value error (comparing 2D to 1D list),
-        # then extract the labels and save as a new accuracy list,
-        # calculate accuracy using new list and return accuracy value.
         try:
             return (sum(self.predictionResults == testing_labels)) / len(testing_labels)
         except ValueError:
+            #   Makes an accuracy list without the confidence values before trying the comparison again,
+            #   it turns the 2D == 1D into 1D == 1D which Python can do.
             accuracy_list = [row[0] for row in self.predictionResults]
             return (sum(accuracy_list == testing_labels)) / len(testing_labels)
