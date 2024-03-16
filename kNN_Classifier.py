@@ -29,6 +29,13 @@ class KNNClassifier:
         self.predictionResults = []
 
     def fit(self, training_data, training_labels):
+
+        #   Fit Function
+
+        #   KNN is a non-parametric learning algorithm, which means that when an unseen data point is given the
+        #   algorithm needs to compare that data point to all training data points, therefore the training data has
+        #   to be kept in memory, and cannot be discarded.
+
         self.trainData = training_data
         self.trainLabels = training_labels
 
@@ -36,7 +43,7 @@ class KNNClassifier:
 
         #   Predict Function
 
-        #   This function takes in unseen data points, and returns the predicted classes for those data points.
+        #   This function takes in a list of unseen data points, and returns the predicted class for every data point.
         #   Optionally, will also return the confidence score if the default False is set to True.
 
         if len(testing_data) == 0:
@@ -80,9 +87,9 @@ class KNNClassifier:
 
     def accuracy(self, testing_labels):
 
-        #   Accuracy function
+        #   Accuracy Function
 
-        #   This function is needed to evaluate the performance of the KNN algorithm, providing the testing classes the
+        #   This function is needed to evaluate the performance of the KNN algorithm, providing the testing classes this
         #   function checks how many of the predicted classes match the testing classes. Returning the decimal value of
         #   how many were correct. Based on this accuracy information you can tell if the model needs more optimisation
         #   by adjusting the number of nearest neighbours considered.
