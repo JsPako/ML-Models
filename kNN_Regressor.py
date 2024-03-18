@@ -84,9 +84,9 @@ class KNNRegressor:
 
         #   Mean Squared Error (MSE) Function
 
-        #   This function is needed to evaluate the performance of the KNN algorithm, providing the testing values this
+        #   This function is needed to evaluate the performance of the KNN algorithm, provided the testing values this
         #   function calculates the MSE of the predicted values against the true testing values. Based on the MSE value
-        #   this function returns, you can tell how well the model is performing, and if the model needs adjusting
+        #   this function returns, you can evaluate how well the model is performing, and if the model needs adjusting
         #   which is done by changing the number of nearest neighbours considered.
 
         if not self.predictionResults or not testing_values.any():
