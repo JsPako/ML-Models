@@ -6,8 +6,18 @@ class SupportVectorMachine:
         self.intercepts = []
         self.predictionResults = []
 
-    def fit(self):
-        pass
+    def fit(self, training_data, training_labels):
+        self.trainData = training_data
+        self.trainLabels = training_labels
+
+        unique_classes = list(set(self.trainLabels))
+
+        data_dictionary = {}
+        for class_name in unique_classes:
+            data_dictionary[class_name] = []
+
+        for class_name, data in zip(self.trainLabels, self.trainData):
+            data_dictionary[class_name].append(data)
 
     def predict(self):
         pass
