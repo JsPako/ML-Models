@@ -108,7 +108,7 @@ class DecisionTreeClassifier:
         num_rows, num_columns = subset.shape
         unique_labels = set(subset_labels)
 
-        #   A predefined condition to force a leaf to be created, when either the minimum subset size has been or
+        #   A predefined condition to force a leaf to be created, when either the minimum subset size has been met or
         #   all of the classes in the split are the same. This is necessary so that the decision tree algorithm does not
         #   overfit the training data.
         if num_rows <= self.minSize or len(unique_labels) == 1:
