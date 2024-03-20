@@ -1,3 +1,6 @@
+from itertools import combinations
+
+
 class SupportVectorMachine:
     def __init__(self):
         self.trainData = None
@@ -19,6 +22,7 @@ class SupportVectorMachine:
         for class_name, data in zip(self.trainLabels, self.trainData):
             data_dictionary[class_name].append(data)
 
+        pairings = list(combinations(unique_classes, 2))
     def predict(self):
         pass
 
