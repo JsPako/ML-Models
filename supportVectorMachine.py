@@ -1,4 +1,5 @@
 from itertools import combinations
+import math
 
 
 class SupportVectorMachine:
@@ -15,14 +16,46 @@ class SupportVectorMachine:
 
         unique_classes = list(set(self.trainLabels))
 
-        data_dictionary = {}
-        for class_name in unique_classes:
-            data_dictionary[class_name] = []
-
-        for class_name, data in zip(self.trainLabels, self.trainData):
-            data_dictionary[class_name].append(data)
-
         pairings = list(combinations(unique_classes, 2))
+
+        data_pairing = []
+        for pairing in pairings:
+            value_pairing = []
+            for data in zip(self.trainData, self.trainLabels):
+                if data[1] in pairing:
+                    data = list(data)
+                    if data[1] == pairing[0]:
+                        data[1] = 0
+                    else:
+                        data[1] = 1
+                    value_pairing.append(data)
+            data_pairing.append(value_pairing)
+
+        for data in data_pairing:
+          return self._linear_function(data, 5000, 0.001, 2), data
+    @staticmethod
+    def _linear_function(data, epoch, alpha, C):
+        gradient = [0] * len(data[0])
+        intercept = 0
+        for iteration in range(epoch):
+            for x, y in data:
+                predict_y = 0
+
+                for index in range(len(gradient)):
+                    predict_y += x[index] * gradient[index] - intercept
+
+                hinge_loss = max(0, 1 - (y * predict_y))
+                if hinge_loss != 0:
+                    for index in range(len(gradient)):
+                        gradient[index] -= (-y * x[index]) - (C * gradient[index]) * alpha * (1 / len(data))
+                    intercept -= y * alpha * (1 / len(data))
+
+        return gradient, intercept
+    @staticmethod
+    def _standard_logistic_function(value, coefficient, intercept):
+        fx = 1 / (1 + math.exp(-(coefficient * value + intercept)))
+        return fx
+
     def predict(self):
         pass
 
