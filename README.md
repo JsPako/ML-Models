@@ -37,6 +37,7 @@ or use Python with the following dependencies:
 
 ```
   Python 3.10.11
+  numpy 2.0.0b1
 ```
 
 
