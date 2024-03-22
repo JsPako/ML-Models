@@ -39,7 +39,7 @@ class LogisticRegression:
         for row in testing_data:
             prediction = 0
             for feature in range(testing_data.shape[1]):
-                probability = self.standard_logistic_function(row[feature], self.coefficients[feature],
+                probability = self._standard_logistic_function(row[feature], self.coefficients[feature],
                                                               self.intercepts[feature])
                 prediction = math.log(probability / (1 - probability))
                 prediction += max(min(prediction, upper_bound), lower_bound)
@@ -47,7 +47,7 @@ class LogisticRegression:
         return self.predictionResults
 
     @staticmethod
-    def standard_logistic_function(value, coefficient, intercept):
+    def _standard_logistic_function(value, coefficient, intercept):
         fx = 1 / (1 + math.exp(-(coefficient * value + intercept)))
         return fx
 
