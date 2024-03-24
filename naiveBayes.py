@@ -4,34 +4,49 @@ from collections import Counter
 
 class NaiveBayes:
 
-    # Naive Bayes Classifier Constructor
+    #   Naive Bayes Classifier.
+
+    #   This classifier implements the Naive Bayes algorithm for classification tasks. It calculates the prior
+    #   probabilities of each class and the mean and standard deviation of each feature within each class during the
+    #   training phase. During prediction, it calculates the likelihood of a data point belonging to each of the
+    #   classes and selects the class with the highest likelihood as the predicted class.
+
     def __init__(self):
+
+        #   Naive Bayes Classifier Constructor.
+
+        #   The constructor does not require any user input, however it is essential that the instance variables
+        #   including training data, training labels, class probabilities, feature mean, and standard deviation are
+        #   initialised before the fit function is called.
+
         self.trainData = None
         self.trainLabels = None
         self.classProbability = {}
         self.featureMeanStandardDeviation = {}
         self.predictionResults = []
 
-    # Fit function that takes the training data and the training labels,
-    # and sets them as variable instances inside the class.
     def fit(self, training_data, training_labels):
+
+        #   Fit Function
+
+        #   This is the key function that trains the Naive Bayes classifier by calculating class prior probabilities
+        #   and feature mean and standard deviation for each class. The calculated values are then used to form a
+        #   normal distributions for each of the classes, which is later used for calculating the probabilities.
+
         self.trainData = training_data
         self.trainLabels = training_labels
 
-        # Get the required variables to calculate the prior probabilities.
         unique_classes = list(Counter(self.trainLabels).keys())
         count_of_unique_classes = list(Counter(self.trainLabels).values())
         size_of_classes = len(self.trainLabels)
 
-        # Iterate through the class name,
-        # and set the dictionary values to be "class_name" : "probability".
+        #   Iterate through the class name, and set the dictionary values to be "class_name" : "probability".
         for class_name, count in zip(unique_classes, count_of_unique_classes):
             self.classProbability[class_name] = count / size_of_classes
 
-        # Set up a dictionary and initialise key values,
-        # the filter training data into the dictionary,
-        # keys are the label names, and the value is a 2D array containing the appropriate data,
-        # 1D is the row, 2D is the feature within that row.
+        #   Set up a dictionary and initialise the class names as keys, then filter training data into the dictionary,
+        #   to make each class contain the appropriate data. This is used to separate the data so that each feature is
+        #   analysed independently.
         data_dictionary = {}
         for class_name in unique_classes:
             data_dictionary[class_name] = []
@@ -39,50 +54,49 @@ class NaiveBayes:
         for class_name, data in zip(self.trainLabels, self.trainData):
             data_dictionary[class_name].append(data)
 
-        # Set up the data dictionary that will be used to store the mean and standard deviation
+        #   Data dictionary that will be used to store the mean and standard deviation, those values are later used in
+        #   the prediction phase to calculate likelihood.
         for class_name in unique_classes:
             self.featureMeanStandardDeviation[class_name] = []
 
-        # Calculate the mean and standard deviation for each feature,
-        # Each class should have N feature number of means and standard deviations,
-        # E.G. - (4 Features) = Class_name : 4 means, 4 standard deviations per class.
         index = 0
         for data in data_dictionary.values():
             for feature in range(len(data[0])):
                 mean = 0
                 for row in data:
                     mean += row[feature]
-
                 mean = mean / len(data)
 
                 std = 0
                 for row in data:
                     std += (row[feature] - mean) ** 2
-
                 std = math.sqrt(std / len(data))
 
                 self.featureMeanStandardDeviation[unique_classes[index]].append([mean, std])
-
             index += 1
 
-    # Predict function that takes the testing data,
-    # and iterates through the testing data,
-    # and for each row calculates the likelihood that it belongs in each class,
-    # gets the class label that has the highest likelihood and saves that as the prediction result,
-    # returns a list of predictions, and a confidence if set to True.
     def predict(self, testing_data, confidence=False):
+
+        #   Predict Function
+
+        #   This function takes in a list of unseen data points, and returns the predicted class with the highest
+        #   calculated likelihood for every data point. Optionally, will also return the confidence score if the
+        #   default False is set to True. The confidence is calculated by taking the likelihood values and normalising
+        #   them to be between 0 and 1.0.
+
         for row in testing_data:
             predictions = {}
 
             for class_name, class_probability in self.classProbability.items():
                 predictions[class_name] = 1
+
                 for feature, (mean, std) in enumerate(self.featureMeanStandardDeviation[class_name]):
                     predictions[class_name] *= self.probability_density_function(row[feature], mean, std)
                 predictions[class_name] *= class_probability
 
             prediction = max(predictions, key=predictions.get)
+
             if confidence:
-                # Normalise the confidence values, and return as a 2D array.
                 normalisation = 0
                 for value in predictions.values():
                     normalisation += value
@@ -91,33 +105,40 @@ class NaiveBayes:
 
                 prediction = max(predictions, key=predictions.get)
                 self.predictionResults.append([prediction, confidence])
-
             else:
                 self.predictionResults.append(prediction)
 
         return self.predictionResults
 
-    # Calculate the likelihood that a provided value is within the normal distribution.
     @staticmethod
     def probability_density_function(value, mean, std):
+
+        #   Probability Density Function
+
+        #   Calculates the likelihood that a provided value is within the normal distribution. The calculated output
+        #   from this function is used during the prediction phase to calculate the likelihood of the prediction
+        #   belonging to that class.
+
         exponent = math.exp(- (value - mean) ** 2 / (2 * (std ** 2)))
         base = 1 / math.sqrt(2 * math.pi * (std ** 2))
         return base * exponent
 
-    # Simple function to quick return the accuracy of the model as a decimal.
     def accuracy(self, testing_labels):
-        # Check to see if the predictions list or the testing labels list is empty,
-        # if it is empty then return -1.
+
+        #   Accuracy Function
+
+        #   This function is needed to evaluate the performance of the KNN algorithm, provided the testing classes this
+        #   function checks how many of the predicted classes match the testing classes. Returning the decimal value of
+        #   how many were correct. Based on this accuracy information you can tell if the model needs more optimisation
+        #   by adjusting the number of nearest neighbours considered.
+
         if not self.predictionResults or not testing_labels.any():
             return -1
 
-        # Try to calculate accuracy from the predicted results and provided testing labels,
-        # and if the prediction results also contain the confidence values,
-        # catch the value error (comparing 2D to 1D list),
-        # then extract the labels and save as a new accuracy list,
-        # calculate accuracy using new list and return accuracy value.
         try:
             return (sum(self.predictionResults == testing_labels)) / len(testing_labels)
         except ValueError:
+            #   Makes an accuracy list without the confidence values before trying the comparison again,
+            #   it turns the 2D == 1D into 1D == 1D which Python can do.
             accuracy_list = [row[0] for row in self.predictionResults]
             return (sum(accuracy_list == testing_labels)) / len(testing_labels)
