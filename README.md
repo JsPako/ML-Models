@@ -8,9 +8,7 @@ This repository contains materials for the Manchester Metropolitan University Ma
 ## Assignment Task
 
 The challenge in this assignment is to implement and demonstrate the training and prediction phases for a predictive
-model of your choice, using Python. Your implementation only needs to support continuous numerical predictive
-features, and a range of suitable datasets are available for you to test with on Moodle. The only requirement is that your code must generate appropriate predictions given a particular set of training data.
-Processing time and other related side-issues don’t matter.
+model of your choice, using Python. Your implementation only needs to support continuous numerical predictive features, and a range of suitable datasets are available for you to test with on Moodle. The only requirement is that your code must generate appropriate predictions given a particular set of training data. Processing time and other related side-issues don’t matter.
 
 
 ## Algorithms
@@ -25,7 +23,7 @@ Processing time and other related side-issues don’t matter.
     ### Extracurricular
     - k-Nearest Neighbours Regression
     - Decision Tree Regression
-    - Vector Support Machine Classification
+    - Support Vector Machine Classification
 
 ## Usage
 
