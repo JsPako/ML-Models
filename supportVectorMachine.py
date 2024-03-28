@@ -122,9 +122,11 @@ class SupportVectorMachine:
                 max_margin = max(margins)
                 min_margin = min(margins)
                 confidence_value = (max_margin - min_margin) / max_margin
+                if len(self.pairings) == 1:
+                    confidence_value = 1.0
                 self.predictionResults.append([most_common[0][0], confidence_value])
-
-            self.predictionResults.append(most_common[0][0])
+            else:
+                self.predictionResults.append(most_common[0][0])
 
         return self.predictionResults
 
